@@ -31,3 +31,27 @@ chest-x-ray-pneumonia/
 ├── data/                # 데이터셋 (git 제외)
 └── README.md
 ```
+## 학습 결과
+
+| 모델 | Test Accuracy | NORMAL Recall | PNEUMONIA Recall | NORMAL F1 | PNEUMONIA F1 |
+|------|---------------|----------------|-------------------|-----------|---------------|
+| Simple CNN | 75% | 37% | 97% | 0.52 | 0.83 |
+| EfficientNetB0 | 83% | 56% | 99% | 0.71 | 0.88 |
+
+- EfficientNetB0가 모든 지표에서 Simple CNN을 상회
+- 두 모델 모두 PNEUMONIA recall은 높지만(과소진단 위험 낮음), NORMAL recall이 낮아 정상을 폐렴으로 오진하는 경향 존재 → 향후 개선 필요 지점
+
+## Grad-CAM 해석
+- PNEUMONIA 예측 시 폐 하단부(하엽)에 집중 → 임상적으로 타당한 근거
+- 일부 NORMAL 예측에서 심장 부근에 집중되는 경향 → 폐 영역 외 단서에 의존할 가능성
+
+## 한계점
+- Train 데이터 클래스 불균형 (PNEUMONIA가 NORMAL의 약 2.9배)
+- PNEUMONIA 이미지에 의료장비 아티팩트 동반 → 모델 편향 가능성
+- 원본 데이터셋이 1~5세 소아 환자 한정 → 성인 데이터 일반화 어려움
+- Grad-CAM 해석이 항상 임상적으로 일관되지는 않음
+
+## 향후 개선 방향
+- NORMAL 클래스 데이터 증강 또는 오버샘플링으로 recall 개선
+- 의료장비가 없는 이미지만 따로 학습/평가해 아티팩트 영향 검증
+- 성인 X-ray 데이터셋 추가로 일반화 성능 확인
